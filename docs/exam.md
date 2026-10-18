@@ -33,6 +33,13 @@ bin/rails server
 
 | # | どこで、どんな症状か | どう見つけたか | 原因（なぜそうなるか） | どう直したか |
 |---|---|---|---|---|
-| 1 | | | | |
-| 2 | | | | |
-| … | | | | |
+| 1 | 一覧画面：完了したTODOに取り消し線が付かず、逆に未完了のTODOが灰色の取り消し線で表示される（仕様 一覧6） | 一覧でチェックボタンを押して完了/未完了を切り替え、表示が逆になっていることに気づいた | `index.html.erb` の行クラスが `"done" unless todo.done?` になっており、条件が反転していた | `unless` を `if` に変更（52960b3） |
+| 2 | 一覧画面：締切が近い順ではなく遠い順に並ぶ。締切なしのものが最後にならない（仕様 一覧2） | 一覧の並び順を見て締切が遠いものが上にあることに気づいた。asc に直した後、締切なしのTODOが先頭に来ることにも気づいた | `Todo.by_due` が `due_on: :desc` になっていた。また SQLite では NULL が最小値扱いのため、単に `asc` にすると締切なしが先頭に来る | `order(arel_table[:due_on].asc.nulls_last, id: :asc)` に変更し、締切の昇順＋NULLを最後にした（e760d56, d96be23） |
+| 3 | 登録・編集画面：タイトルを空のまま保存できてしまい、エラーが出ない（仕様 詳細2） | タイトル空で保存を試したら登録できてしまった | `Todo` の `validates :title` に `length` しかなく、`presence` が指定されていなかった | `validates :title, presence: true, length: { maximum: 50 }` に変更（6b59dc3） |
+| 4 | 一覧画面：「未完了 N 件」に他のユーザーの未完了TODOまで数えられている（仕様 一覧3） | alice と bob でログインして件数を比べ、一覧の行数と件数が合わないことに気づいた | `@active_count = Todo.active.count` で全ユーザーのTODOを対象に数えていた | `current_user.todos.active.count` に変更（184fc62） |
+| 5 | 詳細画面：メモに書いたHTMLが文字ではなくHTMLとして解釈されて表示される（XSS）（仕様 詳細1） | メモに `<b>` や `<script>` タグを入れて詳細画面を開いたら、タグとして効いてしまった | `raw(@todo.memo.to_s.gsub("\n", "<br>"))` でエスケープせずに出力していた | `simple_format(h(@todo.memo))` に変更し、エスケープしたうえで改行を保つようにした（9799fae） |
+| 6 | 編集画面：完了済みのTODOを編集して保存すると未完了に戻ってしまう（仕様 詳細3） | 完了にしたTODOを編集・保存したら ✔ が外れていた | フォームに `f.hidden_field :done, value: false` があり、`todo_params` が `:done` を許可しているため、保存のたびに `done=false` で上書きされていた | `value: todo.done?` に変更し、現在の完了状態を送るようにした（9fd1942） |
+| 7 | 削除：削除後に一覧に戻らず、エラー（RecordNotFound）になる（仕様 詳細4） | 削除ボタンを押したらエラー画面になった。ログでも削除後に詳細ページへリダイレクトしていた | `destroy` 後に `redirect_to todo_path(@todo)` で、もう存在しないTODOの詳細へ飛ばしていた | `redirect_to todos_path, notice: "削除しました"` に変更（f4389c9） |
+| 8 | 詳細・編集・削除・切替：URLのIDを変えると他人のTODOを見たり変えたり消したりできる（仕様 詳細5） | alice のTODOのIDを bob でログインした状態でURLに直接入れたら表示できた | `set_todo` が `Todo.find(params[:id])` で、ログインユーザーで絞り込んでいなかった | `current_user.todos.find(params[:id])` に変更。他人のTODOは RecordNotFound（404）になる（78db37c） |
+| 9 | 一覧画面：「未完了」で絞り込んでも絞り込まれず、すべて表示される（仕様 一覧4） | 「未完了」タブを押しても完了済みも出ていた | `FILTERS` は `%w[all active completed]` なのに、`index` では `@filter == "incomplete"` と比較していて一致しなかった | `@filter == "active"` に変更（c1767b5） |
+| 10 | 一覧画面：締切が今日のTODOが「期限切れ」と表示される（仕様 一覧7） | 締切が今日のTODOに赤字の「期限切れ」が出ていた | `overdue?` が `due_on <= today` で、今日も期限切れ扱いになっていた | `due_on < today` に変更（97c55ad） |
