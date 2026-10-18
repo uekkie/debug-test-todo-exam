@@ -4,7 +4,7 @@
   <dt>状態</dt><dd><%= @todo.done? ? "完了" : "未完了" %></dd>
   <dt>カテゴリ</dt><dd><%= @todo.category&.name || "なし" %></dd>
   <dt>締切</dt><dd><%= @todo.due_on ? l(@todo.due_on) : "なし" %></dd>
-  <dt>メモ</dt><dd class="memo"><%= raw(@todo.memo.to_s.gsub("\n", "<br>")) %></dd>
+  <dt>メモ</dt><dd class="memo"><%= simple_format(h(@todo.memo)) %></dd>
 </dl>
 
 <p>
