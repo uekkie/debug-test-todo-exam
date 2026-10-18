@@ -6,7 +6,7 @@ class Todo < ApplicationRecord
 
   scope :active, -> { where(done: false) }
   scope :completed, -> { where(done: true) }
-  scope :by_due, -> { order(due_on: :asc, id: :asc) }
+  scope :by_due, -> { order(arel_table[:due_on].asc.nulls_last, id: :asc) }
 
   def self.search(keyword)
     return all if keyword.blank?
