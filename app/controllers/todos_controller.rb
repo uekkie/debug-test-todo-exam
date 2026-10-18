@@ -9,7 +9,7 @@ class TodosController < ApplicationController
     todos = todos.active if @filter == "incomplete"
     todos = todos.completed if @filter == "completed"
     @todos = todos
-    @active_count = Todo.active.count
+    @active_count = current_user.todos.active.count
   end
 
   def show
