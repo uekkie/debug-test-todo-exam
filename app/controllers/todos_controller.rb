@@ -6,7 +6,7 @@ class TodosController < ApplicationController
   def index
     @filter = FILTERS.include?(params[:filter]) ? params[:filter] : "all"
     todos = current_user.todos.search(params[:q]).by_due
-    todos = todos.active if @filter == "incomplete"
+    todos = todos.active if @filter == "active"
     todos = todos.completed if @filter == "completed"
     @todos = todos
     @active_count = current_user.todos.active.count
