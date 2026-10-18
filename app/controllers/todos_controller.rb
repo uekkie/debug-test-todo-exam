@@ -41,7 +41,7 @@ class TodosController < ApplicationController
 
   def destroy
     @todo.destroy
-    redirect_to todo_path(@todo), notice: "削除しました"
+    redirect_to todos_path, notice: "削除しました"
   end
 
   def toggle
