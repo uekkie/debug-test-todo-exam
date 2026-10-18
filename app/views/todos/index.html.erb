@@ -1,0 +1,38 @@
+<h1>TODO 一覧</h1>
+
+<p class="summary">未完了 <strong id="active-count"><%= @active_count %></strong> 件</p>
+
+<nav class="filters">
+  <% { "all" => "すべて", "active" => "未完了", "completed" => "完了" }.each do |key, label| %>
+    <%= link_to label, todos_path(filter: key, q: params[:q]), class: (@filter == key ? "current" : nil) %>
+  <% end %>
+</nav>
+
+<%= form_with url: todos_path, method: :get, class: "search" do |f| %>
+  <%= f.hidden_field :filter, value: @filter %>
+  <%= f.search_field :q, value: params[:q], placeholder: "タイトルで検索" %>
+  <%= f.submit "検索" %>
+<% end %>
+
+<p><%= link_to "新しい TODO", new_todo_path %></p>
+
+<table class="todos">
+  <thead>
+    <tr><th>完了</th><th>タイトル</th><th>カテゴリ</th><th>締切</th></tr>
+  </thead>
+  <tbody>
+    <% @todos.each do |todo| %>
+      <tr id="<%= dom_id(todo) %>" class="<%= "done" unless todo.done? %> <%= "overdue" if todo.overdue? %>">
+        <td>
+          <%= button_to (todo.done? ? "✔" : "　"), toggle_todo_path(todo, filter: @filter), method: :patch, class: "check", title: "完了を切り替える" %>
+        </td>
+        <td><%= link_to todo.title, todo_path(todo) %></td>
+        <td><%= todo.category&.name || "なし" %></td>
+        <td>
+          <%= todo.due_on ? l(todo.due_on) : "なし" %>
+          <% if todo.overdue? %><span class="badge">期限切れ</span><% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,31 @@
+ja:
+  date:
+    formats:
+      default: "%Y/%m/%d"
+    abbr_day_names: [日, 月, 火, 水, 木, 金, 土]
+    day_names: [日曜日, 月曜日, 火曜日, 水曜日, 木曜日, 金曜日, 土曜日]
+    abbr_month_names: [~, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    month_names: [~, 1月, 2月, 3月, 4月, 5月, 6月, 7月, 8月, 9月, 10月, 11月, 12月]
+    order:
+      - :year
+      - :month
+      - :day
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "バリデーションに失敗しました: %{errors}"
+    models:
+      todo: TODO
+    attributes:
+      todo:
+        title: タイトル
+        memo: メモ
+        due_on: 締切
+        category: カテゴリ
+  errors:
+    format: "%{attribute}%{message}"
+    messages:
+      blank: を入力してください
+      too_long: は%{count}文字以内で入力してください
+      taken: はすでに使われています
+      required: を入力してください

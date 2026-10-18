@@ -1,0 +1,16 @@
+body { font-family: system-ui, sans-serif; margin: 0; color: #222; }
+header { display: flex; gap: 1rem; align-items: center; padding: .75rem 1.5rem; background: #f3f4f6; }
+header .brand { font-weight: bold; margin-right: auto; text-decoration: none; color: #222; }
+main { max-width: 760px; margin: 1.5rem auto; padding: 0 1rem; }
+.flash { padding: .5rem .75rem; border-radius: 4px; background: #eef6ff; }
+.flash-alert { background: #fdecec; }
+.filters a { margin-right: .75rem; }
+.filters a.current { font-weight: bold; }
+table.todos { width: 100%; border-collapse: collapse; }
+table.todos th, table.todos td { border-bottom: 1px solid #e5e7eb; padding: .4rem; text-align: left; }
+tr.done td { color: #9ca3af; text-decoration: line-through; }
+tr.overdue td { color: #b91c1c; }
+.badge { font-size: .75rem; background: #b91c1c; color: #fff; border-radius: 3px; padding: 0 .3rem; }
+button.check { width: 2rem; }
+button.link { background: none; border: none; color: #2563eb; cursor: pointer; }
+.errors { color: #b91c1c; }

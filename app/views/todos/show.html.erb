@@ -1,0 +1,14 @@
+<h1><%= @todo.title %></h1>
+
+<dl>
+  <dt>状態</dt><dd><%= @todo.done? ? "完了" : "未完了" %></dd>
+  <dt>カテゴリ</dt><dd><%= @todo.category&.name || "なし" %></dd>
+  <dt>締切</dt><dd><%= @todo.due_on ? l(@todo.due_on) : "なし" %></dd>
+  <dt>メモ</dt><dd class="memo"><%= raw(@todo.memo.to_s.gsub("\n", "<br>")) %></dd>
+</dl>
+
+<p>
+  <%= link_to "編集", edit_todo_path(@todo) %> |
+  <%= link_to "一覧に戻る", todos_path %>
+</p>
+<%= button_to "削除", todo_path(@todo), method: :delete, data: { turbo_confirm: "削除しますか？" } %>
