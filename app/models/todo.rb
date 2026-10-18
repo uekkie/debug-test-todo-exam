@@ -15,6 +15,6 @@ class Todo < ApplicationRecord
   end
 
   def overdue?(today = Date.current)
-    !done? && due_on.present? && due_on <= today
+    !done? && due_on.present? && due_on < today
   end
 end
