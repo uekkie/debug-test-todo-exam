@@ -2,7 +2,7 @@ class Todo < ApplicationRecord
   belongs_to :user
   belongs_to :category, optional: true
 
-  validates :title, length: { maximum: 50 }
+  validates :title, presence: true, length: { maximum: 50 }
 
   scope :active, -> { where(done: false) }
   scope :completed, -> { where(done: true) }
